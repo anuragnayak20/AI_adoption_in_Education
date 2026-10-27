@@ -33,7 +33,28 @@ as ai_tool_ranking
 where tool_rn <= 3 and role = "student";
 
 -- Step 0: sanity checks (2 minutes)
+select round(min(sentiment_polarity),2) as min_sentiment_kpi, round(max(sentiment_polarity),2) as max_sentiment_kpi,
+round(min(subjectivity),2) as min_subjectivity_kpi, round(max(subjectivity),2) as max_subjectivity_kpi,
+round(min(adaptive_difficulty_start),2) as min_diff_kpi, round(max(adaptive_difficulty_start),2) as max_diff_kpi,
+round(min(improvement),2) as min_improv_kpi, round(max(improvement),2) as max_improv_kpi,
+round(min(perceived_usefulness),2) as min_usefullness_kpi, round(max(perceived_usefulness),2) as max_usefullness_kpi,
+round(min(perceived_ease_of_use),2) as min_ease_of_use_kpi, round(max(perceived_ease_of_use),2) as max_ease_of_use_kpi,
+round(min(trust_score),2) as min_trust_kpi, round(max(trust_score),2) as max_trust_kpi
+from ai_data;
+
 -- Which use purposes deliver results → core features
+select ai_use_purpose, round(avg(improvement),2) as avg_imp,
+round(avg(satisfaction_score),2) as avg_satisfy
+from ai_data group by ai_use_purpose order by avg_imp desc, avg_satisfy desc;
+-- same but among students
+select ai_use_purpose, round(avg(improvement),2) as avg_imp,
+round(avg(satisfaction_score),2) as avg_satisfy
+from ai_data where role = "student" group by ai_use_purpose order by avg_imp desc, avg_satisfy desc;
+-- same but among teachers
+select ai_use_purpose, round(avg(improvement),2) as avg_imp,
+round(avg(satisfaction_score),2) as avg_satisfy
+from ai_data where role = "teacher" group by ai_use_purpose order by avg_imp desc, avg_satisfy desc;
+
 -- Which tool types work best → what to copy or avoid
 -- Sentiment and emotion → experience design
 -- Ethical concerns → trust and safety features
